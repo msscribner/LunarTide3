@@ -1,0 +1,94 @@
+﻿
+<body ng-app="LunarTideModule" ng-controller="SeaWitchController">
+   <div class="navbar navbar-default navbar-fixed-top top-navbar">
+      <div class="container app-container">
+         <div class="navbar-header">
+            <h1>P A G E - O N E</h1>
+         </div>
+      </div>
+   </div>
+
+   <br />
+   <br />
+
+
+            <!-- Display the Add/Update/Delete push buttons -->
+            <div id="outer">
+               <button class="btn inner" ng-click="runAddSong()">Add</button>
+               <button class="btn inner" ng-click="runUpdateSong()">Update</button>
+               <button class="btn btn-danger inner" ng-click="runDeleteSong()">Delete</button>
+            </div> 
+
+            
+            <!-- Display fields to Add a new song -->
+            <div class="container body-content app-container" ng-show = "hideInput">
+               <div class="panel panel-default">
+                  <div class="panel-body">
+
+                     <!-- Display the SongName/Artist Name Text boxes -->
+                     <label>Song Name:
+                        <input type="text" name="input" ng-model="songname" ng-trim="false" >
+                     </label>
+                     <label>Artist Name:
+                        <input type="text" name="input" ng-model="songartist" ng-trim="false" >
+                     </label>
+
+                     <button class="btn inner" ng-click="runOKAddSong()">OK</button> 
+                  </div>
+               </div>
+            </div>
+
+            <!-- Display fields to Update an existing song -->
+            <div class="container body-content app-container" ng-show = "hideUpdate">
+                  <div class="panel panel-default">
+                     <div class="panel-body">
+   
+                        <!-- Display the SongName/Artist Name Text boxes -->
+                        <label>Song Name:
+                           <input type="text" name="input" ng-model="songname" ng-trim="false" >
+                        </label>
+                        <label>Artist Name:
+                           <input type="text" name="input" ng-model="songartist" ng-trim="false" >
+                        </label>
+   
+                        <button class="btn inner" ng-click="runOKUpdateSong()">OK</button> 
+                     </div>
+                  </div>
+               </div>
+   
+
+           
+            <br />
+            <br />
+            <br />
+            <br />
+            <br />
+
+
+            <table class="table table-fixedheader table-bordered table-striped ">
+                  <thead>
+                     <th width="15%">ID</th>
+                     <th width="15%">Song Name</th>
+                     <th width="35%">Artist Name</th>
+                  </thead>
+                  <tbody>
+                        <!-- Add the ng-class for selected row; ng-click to call setCllickedRow() function-->
+                         <tr ng-repeat="item in pageonesongs"  ng-class="{'selected':$index == selectedRow}" ng-click="setClickedRow($index)"> 
+                        <td width="15%">{{item.ID}}</td>
+                        <td width="15%">{{item.SongName}}</td>
+                        <td width="35%">{{item.ArtistName}}</td>
+                     </tr>
+                  </tbody>
+            </table>
+
+
+            
+      </div>
+    </div>
+
+   
+   
+      
+
+</body>
+

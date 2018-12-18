@@ -1,0 +1,30 @@
+﻿
+<body ng-app="LunarTideModule" ng-controller="PageOneController">
+   <div class="navbar navbar-default navbar-fixed-top top-navbar">
+      <div class="container app-container">
+         <div class="navbar-header">
+            <h1>M A I N</h1>
+         </div>
+      </div>
+   </div>
+
+   <div class="container body-content app-container">
+   <br />
+   <br />
+   <br />
+   <br />
+   <br />
+   <br />
+
+       <div class="panel panel-default">
+         <div class="panel-body">
+      <div>
+
+      <!-- Traverse the data in data.availableOptions an insert into the Dropdown    -->
+      <select name="selectedQueryId" id="selectedQueryId" ng-model="data.selectedQuery">
+         <option ng-repeat="option in data.availableOptions" value="{{option.id}}">{{option.name}}</option>
+      </select>
+      
+        
+</body>
+

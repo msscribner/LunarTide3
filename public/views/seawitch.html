@@ -1,0 +1,51 @@
+﻿
+<body ng-app="LunarTideModule" ng-controller="SeaWitchController">
+   <div class="navbar navbar-default navbar-fixed-top top-navbar">
+      <div class="container app-container">
+         <div class="navbar-header">
+            <h1>S E A W I T C H</h1>
+         </div>
+      </div>
+   </div>
+
+   <div class="container body-content app-container">
+   <br />
+   <br />
+   <br />
+   <br />
+   <br />
+   <br />
+
+       <div class="panel panel-default">
+         <div class="panel-body">
+<!--        <table class="table table-fixed                      table-striped table-condensed table-hover ">-->
+            <table class="table table-fixedheader table-bordered table-striped ">
+                  <thead>
+                     <th width="14%">MD_ID</th>
+                     <th width="14%">MD_Doctype_Cd</th>
+                     <th width="14%">MD_Title_Txt</th>
+                     <th width="14%">MD_Auth_ID</th>
+                     <th width="14%">MD_Ext_Media_Desc</th>
+                     <th width="14%">MD_Media_Location</th>
+                     <th width="14%">MD_Create_TS</th>
+                  </thead>
+                  <tbody>
+                     <tr ng-repeat="item in mediadescriptionitems">
+                        <td width="14%">{{item.MD_ID}}</td>
+                        <td width="14%">{{item.MD_Doctype_Cd}}</td>
+                        <td width="14%">{{item.MD_Title_Txt}}</td>
+                        <td width="14%">{{item.MD_Auth_ID}}</td>
+                        <td width="14%">{{item.MD_Ext_Media_Desc}}</td>
+                        <td width="14%">{{item.MD_Media_Location}}</td>
+                        <td width="14%">{{item.MD_Create_TS}}</td>
+                     </tr>
+                  </tbody>
+            </table>
+         </div>
+       </div>
+
+
+   </div>
+
+</body>
+
