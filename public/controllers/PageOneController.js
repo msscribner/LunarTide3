@@ -99,16 +99,12 @@
          $scope.runUpdateSong = function() {
             $scope.hideUpdate = true;
 
-            // Loop through the list of songs and populte the Update fields with the song
-            var val;
-            var temp1 = $scope.pageonesongs;
-            for (val of temp1) {
-            if (val.ID === $scope.selectedRow) {
-               $scope.songname = val.SongName;
-               $scope.songartist = val.ArtistName;
-            }
-            console.log(val);
-            }
+            // Find the Select Song; Populate the Update fields with the song
+            var temp1 = $scope.pageonesongs;            
+            var jsonObj = temp1[$scope.selectedRow];
+            $scope.songname = jsonObj.SongName;
+            $scope.songartist = jsonObj.ArtistName;
+
          }; //runUpdateSong
 
          //*********************************************************************
@@ -116,36 +112,22 @@
          //*********************************************************************
          $scope.runDeleteSong = function () {
 
-            //Get the Song an Artist... Create a JsonObject and 'Splice' (delete) song form list 
-            var jsonObj = { ID: $scope.selectedRow, SongName: $scope.songname, ArtistName: $scope.songartist };
+            $scope.confirmDelete = false;
+
+            //Get the Song an Artist... Create a JsonObject and 'Splice' (delete) song from list 
             var temp1 = $scope.pageonesongs;
-
-            var val;
-            let iIndex = 0;
-            for (val of temp1) {
-               if (val.ID === $scope.selectedRow) {
-                  temp1.splice(iIndex, 1 );
-               }
-
-               iIndex++;
-            }
+            var jsonObj = temp1[$scope.selectedRow];
+            temp1.splice($scope.selectedRow, 1 );
             $scope.pageonesongs = temp1;
 
             //Post the jsonObj and insert into Database
             pageongeFactoryCRUD
                .delete_DeleteSong(jsonObj)
-               .then(
-                  function (
-                     data
-                  ) {
+               .then(function (data) {
                      /* Do something here */
                   },
-                  function (
-                     error
-                  ) {
-                     console.log(
-                        error
-                     );
+                  function (error) {
+                     console.log(error);
                   }
                );
 
@@ -171,12 +153,8 @@
                   temp1.push(jsonObj);
                   $scope.pageonesongs = temp1;
                },
-               function(
-                  error
-               ) {
-                  console.log(
-                  error
-                  );
+               function(error) {
+                  console.log(error);
                }
             );
          }; //runOKAddSong
@@ -187,45 +165,43 @@
          $scope.runOKUpdateSong = function() {
             $scope.hideUpdate = false;
 
-            //Get the Song an Artist... Create a JsonObject and 'Splice' into the list of songs
-            var jsonObj = { ID: $scope.selectedRow, SongName: $scope.songname, ArtistName: $scope.songartist };
+            // Update the selected Song with the Song and Artist... 
+            // Pull out the jsonObject
+            // update the fields
+            // 'Splice' into the list of songs
+            // Reset the list of songs
             var temp1 = $scope.pageonesongs;
+            var jsonObj = temp1[$scope.selectedRow];
+            jsonObj.SongName = $scope.songname;
+            jsonObj.ArtistName = $scope.songartist;
 
-            var val;
-            let iIndex = 0;
-            for (val of temp1) {
-            if (val.ID === $scope.selectedRow) {
-               temp1.splice(iIndex, 1, jsonObj);
-            }
-
-            iIndex++;
-            }
-            $scope.pageonesongs = temp1;
 
             //Post the jsonObj and insert into Database
             pageongeFactoryCRUD
             .put_UpdateSong(
                jsonObj
             )
-            .then(
-               function(
-                  data
-               ) {
+            .then(function(data) {
                   /* Do something here */
+                  temp1.splice($scope.selectedRow, 1, jsonObj);
+                  $scope.pageonesongs = temp1;            
                },
-               function(
-                  error
-               ) {
-                  console.log(
-                  error
-                  );
+               function(error) {
+                  console.log(error);
                }
             );
          }; //runOKUpdateSong
 
+         $scope.toggleConfirmDelete = function(toggle) {
+            $scope.confirmDelete = toggle;
+         }
+
+
 
          function pageLoad() {
             console.log("Inside the PageOneControll::pageLoad()");
+
+            $scope.confirmDelete = false;
 
             //*********************************************************************
             //* If the AppFolderID is valued, then search and display results

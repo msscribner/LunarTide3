@@ -12,10 +12,21 @@
 
 
    <!-- Display the Add/Update/Delete push buttons -->
-   <div id="outer">
+   <!-- <div id="outer">
       <button class="btn inner" ng-click="runAddSong()">Add</button>
       <button class="btn inner" ng-click="runUpdateSong()">Update</button>
       <button class="btn btn-danger inner" ng-click="runDeleteSong()">Delete</button>
+   </div> -->
+
+   <div id="outer">
+      <button class="btn inner" ng-click="runAddSong()">Add</button>
+      <button class="btn inner" ng-click="runUpdateSong()">Update</button>
+      <span ng-if="confirmDelete">
+         <span>Are you sure you want to Delete?</span>
+            <button class="btn btn-danger inner" ng-click="runDeleteSong()">Yes</button>
+            <button class="btn inner" ng-click="toggleConfirmDelete(false)">No</button>
+         </span>
+      <button class="btn btn-danger inner" ng-click="toggleConfirmDelete(true)" ng-if="!confirmDelete">Delete</button>
    </div>
 
 
