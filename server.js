@@ -118,14 +118,15 @@ app.post("/ASQuery/api/apiAddSong", function(req, res) {
       } else {
         var request = new sql.Request();
 
+        /* Construct the Insert Query...                                           */
+        /* NOTE: Returning the Scope_Identity as 'rows.recordset[0].identityvalue' */
         var temp = [];
-
         temp.push(
           "INSERT INTO Song_Tab (SongName, ArtistName) VALUES ('" +
             song +
             "', '" +
             artist +
-            "')"
+            "') SELECT SCOPE_IDENTITY() as identityvalue"
         );
         query = temp.join("");
 
@@ -139,12 +140,16 @@ app.post("/ASQuery/api/apiAddSong", function(req, res) {
               result: "error",
               err: err.code
             });
-          } else {
+          } 
+          else {
+            /* Just for debugging to see the IdentityValue */
+            var results = rows.recordset[0].identityvalue;
+
             res.send({
               result: "success",
               err: "",
               json: rows,
-              length: rows.length
+              length: rows.length,
             });
 
             sql.close();

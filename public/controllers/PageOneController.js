@@ -13,7 +13,7 @@
       var baseurl = "/ASQuery/";
 
 
-      function getAllSongs() {
+      function get_AllSongs() {
          var deferred = $q.defer();
 
          $http.get(baseurl + 'api/apiGetAllSongs').then(function (result) {
@@ -65,7 +65,7 @@
 
 
       return {
-         getAllSongs: getAllSongs,
+         get_AllSongs: get_AllSongs,
          post_AddSong: post_AddSong,
          put_UpdateSong: put_UpdateSong,
          delete_DeleteSong: delete_DeleteSong
@@ -152,27 +152,24 @@
          }; //runDeleteSong
 
          //*********************************************************************
-         //* function runOK - Add a song
+         //* function runOKAddSong - Add a song
          //*********************************************************************
          $scope.runOKAddSong = function() {
             $scope.hideInput = false;
 
             var jsonObj = { SongName: $scope.songname, ArtistName: $scope.songartist };
 
-            var temp1 = $scope.pageonesongs;
-            temp1.push(jsonObj);
-            $scope.pageonesongs = temp1;
 
             //Post the jsonObj and insert into Database
             pageongeFactoryCRUD
-            .post_AddSong(
-               jsonObj
-            )
-            .then(
-               function(
-                  data
-               ) {
-                  /* Do something here */
+            .post_AddSong(jsonObj)
+            .then( function(data) {
+                  /* Row was Added Successfully.  Pull out the IdentityValue and insert into the new jsonObj  */
+                  var temp1 = $scope.pageonesongs;
+                  var identityvalue = data.json.recordset[0].identityvalue;
+                  jsonObj.ID = identityvalue;
+                  temp1.push(jsonObj);
+                  $scope.pageonesongs = temp1;
                },
                function(
                   error
@@ -233,13 +230,13 @@
             //*********************************************************************
             //* If the AppFolderID is valued, then search and display results
             //*********************************************************************
-            // pageongeFactoryCRUD.getAllSongs({ appFolderID: appFolderID } ).then(function (data) {
+            // pageongeFactoryCRUD.get_AllSongs({ appFolderID: appFolderID } ).then(function (data) {
             //    $scope.appfoldertabitems = data.data.json;
             //    }, function (error) {
             //       console.log(error);
             // });
             pageongeFactoryCRUD
-            .getAllSongs()
+            .get_AllSongs()
             .then(
                function(
                   data
@@ -248,12 +245,8 @@
                   data.json.recordset;
 
                   var val;
-                  for (val of data
-                  .json
-                  .recordset) {
-                  console.log(
-                     val
-                  );
+                  for (val of data.json.recordset) {
+                     console.log(val);
                   }
                },
                function(
