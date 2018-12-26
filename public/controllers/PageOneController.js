@@ -40,11 +40,21 @@
       function put_UpdateSong(jsonObj) {
          var deferred = $q.defer();
 
-         $http.put(baseurl + 'api/apiUpdateSong', jsonObj).then(function (result) {
-            deferred.resolve(result.data);
-         }, function (error) {
+         // $http.put(baseurl + 'api/apiUpdateSong', jsonObj).then(function (result) {
+         //    deferred.resolve(result.data);
+         // }, function (error) {
+         //    deferred.reject(error);
+         // });
+
+         var onComplete = function(result) {
+               deferred.resolve(result.data);
+         };
+         
+         var onError = function (error) {
             deferred.reject(error);
-         });
+         };
+
+         $http.put(baseurl + 'api/apiUpdateSong', jsonObj).then(onComplete, onError);
 
          return deferred.promise;
       }
@@ -94,7 +104,7 @@
          }; //runAddSong
 
          //*********************************************************************
-         //* function runUpdateSong - Add a song
+         //* function runUpdateSong - Update a song
          //*********************************************************************
          $scope.runUpdateSong = function() {
             $scope.hideUpdate = true;
@@ -114,7 +124,7 @@
 
             $scope.confirmDelete = false;
 
-            //Get the Song an Artist... Create a JsonObject and 'Splice' (delete) song from list 
+            //Get the selected record... Create a JsonObject and 'Splice' (delete) song from list 
             var temp1 = $scope.pageonesongs;
             var jsonObj = temp1[$scope.selectedRow];
             temp1.splice($scope.selectedRow, 1 );
@@ -160,7 +170,7 @@
          }; //runOKAddSong
 
          //*********************************************************************
-         //* function runOKUpdateSong - Add a song
+         //* function runOKUpdateSong - Update a song
          //*********************************************************************
          $scope.runOKUpdateSong = function() {
             $scope.hideUpdate = false;
@@ -192,6 +202,8 @@
             );
          }; //runOKUpdateSong
 
+         
+
          $scope.toggleConfirmDelete = function(toggle) {
             $scope.confirmDelete = toggle;
          }
@@ -206,17 +218,10 @@
             //*********************************************************************
             //* If the AppFolderID is valued, then search and display results
             //*********************************************************************
-            // pageongeFactoryCRUD.get_AllSongs({ appFolderID: appFolderID } ).then(function (data) {
-            //    $scope.appfoldertabitems = data.data.json;
-            //    }, function (error) {
-            //       console.log(error);
-            // });
             pageongeFactoryCRUD
             .get_AllSongs()
             .then(
-               function(
-                  data
-               ) {
+               function(data) {
                   $scope.pageonesongs =
                   data.json.recordset;
 
@@ -225,9 +230,7 @@
                      console.log(val);
                   }
                },
-               function(
-                  error
-               ) {
+               function(error) {
                   console.log(
                   error
                   );

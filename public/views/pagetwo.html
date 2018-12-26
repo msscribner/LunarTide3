@@ -9,5 +9,80 @@
    </div>
 
 
+
+   <div>
+      {{ error }}
+    </div>
+  
+
+   <br />
+   <br />
+   <br />
+
+   <!-- Display the Add/Update/Delete push buttons -->
+   <div id="outer">
+      <button class="btn inner" ng-click="runAddGig()">Add</button>
+      <button class="btn inner" ng-click="runUpdateGig()">Update</button>
+      <span ng-if="confirmDelete">
+         <span>Are you sure you want to Delete?</span>
+            <button class="btn btn-danger inner" ng-click="runDeleteGig()">Yes</button>
+            <button class="btn inner" ng-click="toggleConfirmDelete(false)">No</button>
+         </span>
+      <button class="btn btn-danger inner" ng-click="toggleConfirmDelete(true)" ng-if="!confirmDelete">Delete</button>
+   </div>
+
+
+   <!-- Display fields to Add a new Gig -->
+   <div class="container body-content app-container" ng-show="hideInput">
+      <div class="panel panel-default">
+         <div class="panel-body">
+
+            <!-- Display the GigName/Artist Name Text boxes -->
+            <label>Gig Name:
+               <input type="text" name="input" ng-model="gigname" ng-trim="false">
+            </label>
+
+            <button class="btn inner" ng-click="runOKAddGig()">OK</button>
+         </div>
+      </div>
+   </div>
+
+   <!-- Display fields to Update an existing Gig -->
+   <div class="container body-content app-container" ng-show="hideUpdate">
+      <div class="panel panel-default">
+         <div class="panel-body">
+
+            <!-- Display the GigName/Artist Name Text boxes -->
+            <label>Gig Name:
+               <input type="text" name="input" ng-model="gigname" ng-trim="false">
+            </label>
+
+            <button class="btn inner" ng-click="runOKUpdateGig()">OK</button>
+         </div>
+      </div>
+   </div>
+
+   <br />
+   <br />
+   <br />
+   <br />
+   <br />
+
+   <!-- Display table to hold the Gigs -->
+   <table class="table table-fixedheader table-bordered table-striped ">
+      <thead>
+         <th width="15%">Id</th>
+         <th width="15%">Gig Name</th>
+      </thead>
+      <tbody>
+         <!-- Add the ng-class for selected row; ng-click to call setCllickedRow() function-->
+         <tr ng-repeat="item in giglist" ng-class="{'selected':$index == selectedRow}" ng-click="setClickedRow($index)">
+            <td width="15%">{{item.Id}}</td>
+            <td width="15%">{{item.GigName}}</td>
+         </tr>
+      </tbody>
+   </table>
+
+
 </body>
 

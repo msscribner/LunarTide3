@@ -14,9 +14,8 @@ use LUNARTIDE;
 --
 if not exists (select * from sysobjects where name='GIG_TAB' and xtype='U')
     create table GIG_TAB (
-		Id varchar(50) NOT NULL,
-		Gig varchar(500) DEFAULT NULL,
-		PRIMARY KEY (Id)
+		Id int IDENTITY(1,1) PRIMARY KEY,	
+		GigName varchar(50) DEFAULT NULL
     )
 
 --
@@ -58,10 +57,11 @@ if not exists (select * from sysobjects where name='SONG_TAB' and xtype='U')
 -- Dumping data for table `GIG_TAB`, 'SETLIST_TAB' and 'SONG_TAB'
 --
 
-INSERT INTO GIG_TAB (Id, Gig) VALUES
-	('1', 'SeaWitch'),
-	('2', 'Halligans'),
-	('3', 'Smoke On The Water');
+INSERT INTO GIG_TAB (GigName) VALUES
+	( 'SeaWitch'),
+	( 'Halligans'),
+	( 'Smoke On The Water'),
+	( 'Private');
 
 INSERT INTO SETLIST_TAB (Id, GigId, SongId) VALUES
 	('1', '1', '1'),

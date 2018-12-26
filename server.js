@@ -45,6 +45,119 @@ app.get("/Index", function(request, response) {
   response.sendfile("public/views/Index.html");
 });
 
+
+//*********************************************************************
+// ASQuery API's  -- apiGetAllGigs
+//*********************************************************************
+app.get ("/ASQuery/api/apiGetAllGigs", function (req, res) {
+  console.log("Attempting to connect userid = ", config.user);
+  console.log("Attempting to connect password = ", config.password);
+  console.log("Attempting to connect server = ", config.server);
+  console.log("Attempting to connect database = ", config.database);
+
+  sql.connect(
+    config,
+    function(err) {
+      console.log("Fetching Data from GIG_TAB");
+
+      if (err) {
+        console.error("CONNECTION error: ", err);
+        res.statusCode = 503;
+        res.send({
+          result: "error",
+          err: err.code
+        });
+      } else {
+        var request = new sql.Request();
+        request.query("select * from GIG_TAB", function(err, rows) {
+          if (err) {
+            console.error(err);
+            res.statusCode = 500;
+            res.send({
+              result: "error",
+              err: err.code
+            });
+          } else {
+            res.send({
+              result: "success",
+              err: "",
+              json: rows,
+              length: rows.length
+            });
+            sql.close();
+          }
+        });
+      }
+    }
+  );
+});
+
+//*********************************************************************
+// ASQuery API's  -- apiAddGig
+//*********************************************************************
+app.post("/ASQuery/api/apiAddGig", function(req, res) {
+  console.error("Attempting to connect userid = ", config.user);
+  console.error("Attempting to connect password = ", config.password);
+  console.error("Attempting to connect server = ", config.server);
+  console.error("Attempting to connect database = ", config.database);
+
+  var gigName = req.body.GigName;
+
+  sql.connect(
+    config,
+    function(err) {
+      console.error("Adding a Gig to GIG_TAB");
+
+      if (err) {
+        console.error("CONNECTION error: ", err);
+        res.statusCode = 503;
+        res.send({
+          result: "error",
+          err: err.code
+        });
+      } else {
+        var request = new sql.Request();
+
+        /* Construct the Insert Query...                                           */
+        /* NOTE: Returning the Scope_Identity as 'rows.recordset[0].identityvalue' */
+        var temp = [];
+        temp.push(
+          "INSERT INTO GIG_TAB (GigName) VALUES ('" +
+            gigName +
+            "') SELECT SCOPE_IDENTITY() as identityvalue"
+        );
+        query = temp.join("");
+
+        console.log("Executing the following query:" + query);
+
+        request.query(query, function(err, rows) {
+          if (err) {
+            console.error(err);
+            res.statusCode = 500;
+            res.send({
+              result: "error",
+              err: err.code
+            });
+          } 
+          else {
+            /* Just for debugging to see the IdentityValue */
+            var results = rows.recordset[0].identityvalue;
+
+            res.send({
+              result: "success",
+              err: "",
+              json: rows,
+              length: rows.length,
+            });
+
+            sql.close();
+          }
+        });
+      }
+    }
+  );
+});
+
 //*********************************************************************
 // ASQuery API's  -- apiGetAllSongs
 //*********************************************************************
@@ -53,7 +166,7 @@ app.get("/ASQuery/api/apiGetAllSongs", function(req, res) {
   console.error("Attempting to connect password = ", config.password);
   console.error("Attempting to connect server = ", config.server);
   console.error("Attempting to connect database = ", config.database);
-
+  
   sql.connect(
     config,
     function(err) {

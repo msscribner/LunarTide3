@@ -42,9 +42,23 @@
   </div>
 
   <h1>Gig Location</h1>
+
+
+  <!-- Display buttons to manage Gigs and Songs-->
+  <div id="outer">
+    <br/>
+    <br/>
+    <button class="btn inner" ng-click="runManageGigs()">Manage Gigs</button>
+    <button class="btn inner" ng-click="runManageSongs()">Manage Songs</button>
+    <br/>
+    <br/>
+  </div>
+
+
+
   <div>
     <select name="selectedQueryId" id="selectedQueryId" ng-model="data.selectedQuery">
-      <option ng-repeat="option in data.availableOptions" value="{{option.id}}">{{option.name}}</option>
+      <option ng-repeat="option in availableGigs" value="{{option.Id}}">{{option.GigName}}</option>
     </select>
   </div>
   
