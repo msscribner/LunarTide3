@@ -23,7 +23,7 @@
          });
 
          return deferred.promise;
-      }
+      }/*get_AllSongs*/
 
       function post_AddSong(jsonObj) {
          var deferred = $q.defer();
@@ -35,16 +35,10 @@
          });
 
          return deferred.promise;
-      }
+      }/*post_AddSong*/
 
       function put_UpdateSong(jsonObj) {
          var deferred = $q.defer();
-
-         // $http.put(baseurl + 'api/apiUpdateSong', jsonObj).then(function (result) {
-         //    deferred.resolve(result.data);
-         // }, function (error) {
-         //    deferred.reject(error);
-         // });
 
          var onComplete = function(result) {
                deferred.resolve(result.data);
@@ -57,7 +51,7 @@
          $http.put(baseurl + 'api/apiUpdateSong', jsonObj).then(onComplete, onError);
 
          return deferred.promise;
-      }
+      }/*put_UpdateSong*/
 
       function delete_DeleteSong(jsonObj) {
          var deferred = $q.defer();
@@ -70,7 +64,7 @@
          });
 
          return deferred.promise;
-      }
+      }/*delete_DeleteSong*/
 
 
 
