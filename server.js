@@ -158,6 +158,134 @@ app.post("/ASQuery/api/apiAddGig", function(req, res) {
   );
 });
 
+
+
+//*********************************************************************
+// ASQuery API's  -- apiUpdateGig
+//*********************************************************************
+app.put("/ASQuery/api/apiUpdateGig", function(req, res) {
+  console.error("Attempting to connect userid = ", config.user);
+  console.error("Attempting to connect password = ", config.password);
+  console.error("Attempting to connect server = ", config.server);
+  console.error("Attempting to connect database = ", config.database);
+
+  var id = req.body.Id;
+  var gigname = req.body.GigName;
+
+  sql.connect(
+    config,
+    function(err) {
+      console.error("Updating a Gig to Gig_Tab");
+
+      if (err) {
+        console.error("CONNECTION error: ", err);
+        res.statusCode = 503;
+        res.send({
+          result: "error",
+          err: err.code
+        });
+      } else {
+        var request = new sql.Request();
+
+        var temp = [];
+
+        temp.push(
+          "UPDATE GIG_TAB SET GigName = '" +
+            gigname +
+            "' WHERE Id = '" +
+            id +
+            "' "
+        );
+
+        query = temp.join("");
+
+        console.log("Executing the following query:" + query);
+
+        request.query(query, function(err, rows) {
+          if (err) {
+            console.error(err);
+            res.statusCode = 500;
+            res.send({
+              result: "error",
+              err: err.code
+            });
+          } else {
+            res.send({
+              result: "success",
+              err: "",
+              json: rows,
+              length: rows.length
+            });
+
+            sql.close();
+          }
+        });
+      }
+    }
+  );
+});
+
+//*********************************************************************
+// ASQuery API's  -- apiDeleteGig
+// The route is: /ASQuery/api/apiDeleteGig/:id the Calling Controller 
+// will append the 'id' of the record to be deleted.
+//*********************************************************************
+app.delete("/ASQuery/api/apiDeleteGig/:id", function(req, res) {
+  console.error("Attempting to connect userid = ", config.user);
+  console.error("Attempting to connect password = ", config.password);
+  console.error("Attempting to connect server = ", config.server);
+  console.error("Attempting to connect database = ", config.database);
+
+  //Pull out of the Params the 'id' field
+  const id = parseInt(req.params.id, 10);
+
+
+  sql.connect(
+    config,
+    function(err) {
+      console.error("Delete a Gig from Gig_Tab");
+
+      if (err) {
+        console.error("CONNECTION error: ", err);
+        res.statusCode = 503;
+        res.send({
+          result: "error",
+          err: err.code
+        });
+      } else {
+        var request = new sql.Request();
+
+        var temp = [];
+
+        temp.push("Delete Gig_Tab WHERE Id = '" + id + "' ");
+        query = temp.join("");
+
+        console.log("Executing the following query:" + query);
+
+        request.query(query, function(err, rows) {
+          if (err) {
+            console.error(err);
+            res.statusCode = 500;
+            res.send({
+              result: "error",
+              err: err.code
+            });
+          } else {
+            res.send({
+              result: "success",
+              err: "",
+              json: rows,
+              length: rows.length
+            });
+
+            sql.close();
+          }
+        });
+      }
+    }
+  );
+});
+
 //*********************************************************************
 // ASQuery API's  -- apiGetAllSongs
 //*********************************************************************
@@ -170,7 +298,7 @@ app.get("/ASQuery/api/apiGetAllSongs", function(req, res) {
   sql.connect(
     config,
     function(err) {
-      console.error("Fetching Data from Songs_Tab");
+      console.error("Fetching Data from SONG_TAB");
 
       if (err) {
         console.error("CONNECTION error: ", err);
@@ -181,7 +309,7 @@ app.get("/ASQuery/api/apiGetAllSongs", function(req, res) {
         });
       } else {
         var request = new sql.Request();
-        request.query("select * from Song_Tab", function(err, rows) {
+        request.query("select * from SONG_TAB", function(err, rows) {
           if (err) {
             console.error(err);
             res.statusCode = 500;
@@ -219,7 +347,7 @@ app.post("/ASQuery/api/apiAddSong", function(req, res) {
   sql.connect(
     config,
     function(err) {
-      console.error("Adding a Song to Songs_Tab");
+      console.error("Adding a Song to SONG_TAB");
 
       if (err) {
         console.error("CONNECTION error: ", err);
@@ -235,7 +363,7 @@ app.post("/ASQuery/api/apiAddSong", function(req, res) {
         /* NOTE: Returning the Scope_Identity as 'rows.recordset[0].identityvalue' */
         var temp = [];
         temp.push(
-          "INSERT INTO Song_Tab (SongName, ArtistName) VALUES ('" +
+          "INSERT INTO SONG_TAB (SongName, ArtistName) VALUES ('" +
             song +
             "', '" +
             artist +
@@ -289,7 +417,7 @@ app.put("/ASQuery/api/apiUpdateSong", function(req, res) {
   sql.connect(
     config,
     function(err) {
-      console.error("Updating a Song to Song_Tab");
+      console.error("Updating a Song to SONG_TAB");
 
       if (err) {
         console.error("CONNECTION error: ", err);
@@ -304,7 +432,7 @@ app.put("/ASQuery/api/apiUpdateSong", function(req, res) {
         var temp = [];
 
         temp.push(
-          "UPDATE Song_Tab SET SongName = '" +
+          "UPDATE SONG_TAB SET SongName = '" +
             song +
             "', ArtistName = '" +
             artist +
@@ -358,7 +486,7 @@ app.delete("/ASQuery/api/apiDeleteSong/:id", function(req, res) {
   sql.connect(
     config,
     function(err) {
-      console.error("Delete a Song from Song_Tab");
+      console.error("Delete a Song from SONG_TAB");
 
       if (err) {
         console.error("CONNECTION error: ", err);
@@ -372,7 +500,7 @@ app.delete("/ASQuery/api/apiDeleteSong/:id", function(req, res) {
 
         var temp = [];
 
-        temp.push("Delete Song_Tab WHERE Id = '" + id + "' ");
+        temp.push("Delete SONG_TAB WHERE Id = '" + id + "' ");
         query = temp.join("");
 
         console.log("Executing the following query:" + query);

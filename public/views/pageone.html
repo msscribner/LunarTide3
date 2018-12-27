@@ -7,10 +7,36 @@
       </div>
    </div>
 
+   <div>
+      {{ error }}
+    </div>
+  
+
+   <br />
    <br />
    <br />
 
 
+      <!-- Display table to hold the Songs -->
+      <table class="table table-fixedheader table-bordered table-striped ">
+         <thead>
+            <th width="15%">ID</th>
+            <th width="15%">Song Name</th>
+            <th width="35%">Artist Name</th>
+         </thead>
+         <tbody>
+            <!-- Add the ng-class for selected row; ng-click to call setCllickedRow() function-->
+            <tr ng-repeat="item in pageonesongs" ng-class="{'selected':$index == selectedRow}" ng-click="setClickedRow($index)">
+               <td width="15%">{{item.ID}}</td>
+               <td width="15%">{{item.SongName}}</td>
+               <td width="35%">{{item.ArtistName}}</td>
+            </tr>
+         </tbody>
+      </table>
+   
+      <br />
+      <br />
+   
    <!-- Display the Add/Update/Delete push buttons -->
    <div id="outer">
       <button class="btn inner" ng-click="runAddSong()">Add</button>
@@ -59,39 +85,6 @@
          </div>
       </div>
    </div>
-
-
-
-   <br />
-   <br />
-   <br />
-   <br />
-   <br />
-
-   <!-- Display table to hold the Songs -->
-   <table class="table table-fixedheader table-bordered table-striped ">
-      <thead>
-         <th width="15%">ID</th>
-         <th width="15%">Song Name</th>
-         <th width="35%">Artist Name</th>
-      </thead>
-      <tbody>
-         <!-- Add the ng-class for selected row; ng-click to call setCllickedRow() function-->
-         <tr ng-repeat="item in pageonesongs" ng-class="{'selected':$index == selectedRow}" ng-click="setClickedRow($index)">
-            <td width="15%">{{item.ID}}</td>
-            <td width="15%">{{item.SongName}}</td>
-            <td width="35%">{{item.ArtistName}}</td>
-         </tr>
-      </tbody>
-   </table>
-
-
-
-   </div>
-   </div>
-
-
-
 
 
 </body>

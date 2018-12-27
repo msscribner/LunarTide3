@@ -24,7 +24,7 @@
             onComplete, onError);
       
         return deferred.promise;
-      }//get_AllGigs
+      }/*get_AllGigs*/
 
       
       function post_AddGig(jsonObj) {
@@ -37,13 +37,46 @@
          });
 
          return deferred.promise;
-      }
+      }/*post_AddGig*/
+
+      function put_UpdateGig(jsonObj) {
+         var deferred = $q.defer();
+
+         var onComplete = function(result) {
+               deferred.resolve(result.data);
+         };
+         
+         var onError = function (error) {
+            deferred.reject(error);
+         };
+
+         $http.put(baseurl + 'api/apiUpdateGig', jsonObj).then(onComplete, onError);
+
+         return deferred.promise;
+      }/*put_UpdateGig*/
+
+      function delete_DeleteGig(jsonObj) {
+         var deferred = $q.defer();
+
+         // Append to the 'route' the 'id' of the record to be deleted
+         $http.delete(baseurl + 'api/apiDeleteGig/' + jsonObj.Id).then(function (result) {
+            deferred.resolve(result.data);
+         }, function (error) {
+            deferred.reject(error);
+         });
+
+         return deferred.promise;
+      }/*delete_DeleteGig*/
+
 
 
 
       return {
          get_AllGigs: get_AllGigs,
-         post_AddGig: post_AddGig
+         post_AddGig: post_AddGig,
+         put_UpdateGig: put_UpdateGig,
+         delete_DeleteGig: delete_DeleteGig
+
       };
    });
 
@@ -63,11 +96,11 @@
          }; //setClickedRow
 
          //*********************************************************************
-         //* function runAddGig - Add a Gig (just enable the entry fields so song can be added)
+         //* function runAddGig - Pushbutton Add - Add a Gig (just enable the entry fields so gig can be added)
          //*********************************************************************
          $scope.runAddGig = function() {
             $scope.hideInput = true;
-         }; //runAddSong
+         }; //runAddGig
 
          //*********************************************************************
          //* function runOKAddGig - Add a Gig
@@ -95,7 +128,89 @@
                   console.log(error);
                }
             );
-         }; //runOKAddSong
+         }; //runOKAddGig
+
+
+         //*********************************************************************
+         //* function runUpdateGig - Pushbutton Update - Update a Gig
+         //*********************************************************************
+         $scope.runUpdateGig = function() {
+            $scope.hideUpdate = true;
+
+            // Find the Select Gig; Populate the Update fields with the Gig
+            var temp1 = $scope.giglist;            
+            var jsonObj = temp1[$scope.selectedRow];
+            $scope.gigname = jsonObj.GigName;
+
+         }; //runUpdateGig
+
+
+         //*********************************************************************
+         //* function runOKUpdateGig - Update a Gig
+         //*********************************************************************
+         $scope.runOKUpdateGig = function() {
+            $scope.hideUpdate = false;
+
+            // Update the selected Gigt... 
+            // Pull out the jsonObject
+            // update the fields
+            // 'Splice' into the list of gigs
+            // Reset the list of gigs
+            var temp1 = $scope.giglist;
+            var jsonObj = temp1[$scope.selectedRow];
+            jsonObj.GigName = $scope.gigname;
+
+
+            //Post the jsonObj and insert into Database
+            pageTwoFactoryCRUD
+            .put_UpdateGig(
+               jsonObj
+            )
+            .then(function(data) {
+                  /* Do something here */
+                  temp1.splice($scope.selectedRow, 1, jsonObj);
+                  $scope.giglist = temp1;            
+               },
+               function(error) {
+                  console.log(error);
+               }
+            );
+         }; //runOKUpdateGig
+
+
+         //*********************************************************************
+         //* function runDeleteGig - Pushbutton Delete - Delete a Gig
+         //*********************************************************************
+         $scope.runDeleteGig = function () {
+
+            $scope.confirmDelete = false;
+
+            //Get the selected record... Create a JsonObject and 'Splice' (delete) Gig from list 
+            var temp1 = $scope.giglist;
+            var jsonObj = temp1[$scope.selectedRow];
+            temp1.splice($scope.selectedRow, 1 );
+            $scope.giglist = temp1;
+
+            //Post the jsonObj and insert into Database
+            pageTwoFactoryCRUD
+               .delete_DeleteGig(jsonObj)
+               .then(function (data) {
+                     /* Do something here */
+                  },
+                  function (error) {
+                     console.log(error);
+                  }
+               );
+
+         }; //runDeleteGig
+
+
+
+         $scope.toggleConfirmDelete = function(toggle) {
+            $scope.confirmDelete = toggle;
+         }
+
+
 
 
 
