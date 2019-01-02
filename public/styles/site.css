@@ -182,3 +182,12 @@ overridden elsewhere.
   color:white;
   font-weight:bold;
 }
+
+#listboxavailable
+{
+    width:150px;
+}
+#listboxassigned
+{
+    width:150px;
+}

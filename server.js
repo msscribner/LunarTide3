@@ -46,6 +46,8 @@ app.get("/Index", function(request, response) {
 });
 
 
+
+
 //*********************************************************************
 // ASQuery API's  -- apiGetAllGigs
 //*********************************************************************
@@ -528,6 +530,249 @@ app.delete("/ASQuery/api/apiDeleteSong/:id", function(req, res) {
     }
   );
 });
+
+
+//*********************************************************************
+// ASQuery API's  -- apiGetAllSetLists
+//*********************************************************************
+app.get ("/ASQuery/api/apiGetAllSetLists", function (req, res) {
+  console.log("Attempting to connect userid = ", config.user);
+  console.log("Attempting to connect password = ", config.password);
+  console.log("Attempting to connect server = ", config.server);
+  console.log("Attempting to connect database = ", config.database);
+
+  sql.connect(
+    config,
+    function(err) {
+      console.log("Fetching Data from SETLIST_TAB");
+
+      if (err) {
+        console.error("CONNECTION error: ", err);
+        res.statusCode = 503;
+        res.send({
+          result: "error",
+          err: err.code
+        });
+      } else {
+        var request = new sql.Request();
+        request.query("select * from SETLIST_TAB", function(err, rows) {
+          if (err) {
+            console.error(err);
+            res.statusCode = 500;
+            res.send({
+              result: "error",
+              err: err.code
+            });
+          } else {
+            res.send({
+              result: "success",
+              err: "",
+              json: rows,
+              length: rows.length
+            });
+            sql.close();
+          }
+        });
+      }
+    }
+  );
+});
+
+//*********************************************************************
+// ASQuery API's  -- apiGetSetListForGig
+//*********************************************************************
+app.get ("/ASQuery/api/apiGetSetListForGig", function (req, res) {
+  console.log("Attempting to connect userid = ", config.user);
+  console.log("Attempting to connect password = ", config.password);
+  console.log("Attempting to connect server = ", config.server);
+  console.log("Attempting to connect database = ", config.database);
+
+
+  sql.connect(
+    config,
+    function(err) {
+      console.log("Fetching Data from SETLIST_TAB");
+
+      if (err) {
+        console.error("CONNECTION error: ", err);
+        res.statusCode = 503;
+        res.send({
+          result: "error",
+          err: err.code
+        });
+      } else {
+        var request = new sql.Request();
+
+        const GigId = parseInt(req.query.GigId, 10);
+
+        var temp = [];
+        temp.push(
+          "SELECT * FROM SETLIST_TAB WHERE GigId = '" +
+          GigId +
+            "'");
+        query = temp.join("");
+
+        console.log("Executing the following query:" + query);
+
+        request.query(query, function(err, rows) {          
+
+          if (err) {
+            console.error(err);
+            res.statusCode = 500;
+            res.send({
+              result: "error",
+              err: err.code
+            });
+          } else {
+            res.send({
+              result: "success",
+              err: "",
+              json: rows,
+              length: rows.length
+            });
+            sql.close();
+          }
+        });
+      }
+    }
+  );
+});
+
+
+//*********************************************************************
+// ASQuery API's  -- apiAddSongToSetlist
+//*********************************************************************
+app.post("/ASQuery/api/apiAddSongToSetlist", function(req, res) {
+  console.error("Attempting to connect userid = ", config.user);
+  console.error("Attempting to connect password = ", config.password);
+  console.error("Attempting to connect server = ", config.server);
+  console.error("Attempting to connect database = ", config.database);
+
+  var gigid = req.body.GigId;
+  var songid = req.body.SongId;
+
+  sql.connect(
+    config,
+    function(err) {
+      console.error("Adding a Song to SETLIST_TAB");
+
+      if (err) {
+        console.error("CONNECTION error: ", err);
+        res.statusCode = 503;
+        res.send({
+          result: "error",
+          err: err.code
+        });
+      } else {
+        var request = new sql.Request();
+
+        /* Construct the Insert Query...                                           */
+        /* NOTE: Returning the Scope_Identity as 'rows.recordset[0].identityvalue' */
+        var temp = [];
+        temp.push(
+          "INSERT INTO SETLIST_TAB (GigId, SongId) VALUES ('" +
+            gigid +
+            "', '" +
+            songid +
+            "') SELECT SCOPE_IDENTITY() as identityvalue"
+        );
+        query = temp.join("");
+
+        console.log("Executing the following query:" + query);
+
+        request.query(query, function(err, rows) {
+          if (err) {
+            console.error(err);
+            res.statusCode = 500;
+            res.send({
+              result: "error",
+              err: err.code
+            });
+          } 
+          else {
+            /* Just for debugging to see the IdentityValue */
+            var results = rows.recordset[0].identityvalue;
+
+            res.send({
+              result: "success",
+              err: "",
+              json: rows,
+              length: rows.length,
+            });
+
+            sql.close();
+          }
+        });
+      }
+    }
+  );
+});
+
+
+//*********************************************************************
+// ASQuery API's  -- apiDeleteSongFromSetlist
+// The route is: /ASQuery/api/apiDeleteSongFromSetlist/:id the Calling Controller 
+// will append the 'id' of the record to be deleted.
+//*********************************************************************
+app.delete("/ASQuery/api/apiDeleteSongFromSetlist/:id", function(req, res) {
+  console.error("Attempting to connect userid = ", config.user);
+  console.error("Attempting to connect password = ", config.password);
+  console.error("Attempting to connect server = ", config.server);
+  console.error("Attempting to connect database = ", config.database);
+
+  //Pull out of the Params the 'id' field
+  const id = parseInt(req.params.id, 10);
+
+
+  sql.connect(
+    config,
+    function(err) {
+      console.error("Delete a Song from SETLIST_TAB");
+
+      if (err) {
+        console.error("CONNECTION error: ", err);
+        res.statusCode = 503;
+        res.send({
+          result: "error",
+          err: err.code
+        });
+      } else {
+        var request = new sql.Request();
+
+        var temp = [];
+
+        temp.push("Delete SETLIST_TAB WHERE Id = '" + id + "' ");
+        query = temp.join("");
+
+        console.log("Executing the following query:" + query);
+
+        request.query(query, function(err, rows) {
+          if (err) {
+            console.error(err);
+            res.statusCode = 500;
+            res.send({
+              result: "error",
+              err: err.code
+            });
+          } else {
+            res.send({
+              result: "success",
+              err: "",
+              json: rows,
+              length: rows.length
+            });
+
+            sql.close();
+          }
+        });
+      }
+    }
+  );
+});
+
+
+
+
 
 /*https://code.msdn.microsoft.com/SQL-Server-CRUD-Actions-6bc910fd/sourcecode?fileId=164040&pathId=829862964*/
 /*https://books.google.com/books?id=JevUDQAAQBAJ&pg=PA306&lpg=PA306&dq=node+%22mssql+%22+insert+%22.query%22&source=bl&ots=tlt0hb46di&sig=7QRI6uAu8R3vkYD97dfzoswlTZw&hl=en&sa=X&ved=2ahUKEwjfvaHX7ZvfAhUxtlkKHS3-DUA4HhDoATAGegQICBAB#v=onepage&q=node%20%22mssql%20%22%20insert%20%22.query%22&f=false*/
