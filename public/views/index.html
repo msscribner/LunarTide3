@@ -48,23 +48,24 @@
   <div id="outer">
     <br/>
     <br/>
-    <button class="btn inner" ng-click="runManageGigs()">Manage Gigs</button>
     <button class="btn inner" ng-click="runManageSongs()">Manage Songs</button>
+    <button class="btn inner" ng-click="runManageGigs()">Manage Gigs</button>
+    <button class="btn inner" ng-click="runManageSetList()">Manage Setlist</button>    
     <br/>
     <br/>
   </div>
 
 
 
-  <div>
+  <!-- <div>
     <select name="selectedQueryId" id="selectedQueryId" ng-model="data.selectedQuery">
       <option ng-repeat="option in arrgigs" value="{{option.Id}}">{{option.GigName}}</option>
     </select>
-  </div>
+  </div> -->
   
 
   <!-- When pressed, execute the runQuery function in the MainController -->
-  <button class="btn btn-danger" ng-click="runQuery()">Run Query</button><br> 
+  <!-- <button class="btn btn-danger" ng-click="runQuery()">Run Query</button><br>  -->
 
 
 
@@ -87,56 +88,6 @@
 <div>
     <div ui-view></div>
 </div>
-<!-- begin mss-test -->
-<br /><br />
-
-<table>
-  <td>&nbsp;&nbsp;&nbsp;</td>
-
-  <td>
-    <div>Assigned</div>
-      <!-- 
-        https://www.aspsnippets.com/Articles/AngularJS-Populate-Bind-HTML-Select-DropDownList-Options-from-JSON-array-using-ng-options.aspx
-        Add the 'track by x.Id'
-        SongName will be associated with the elements .label attribute
-        Id will be associated with the elements .value attribute
-       -->
-      <!-- <select id="listboxassigned" size="10" multiple ng-model="assignedSongs" ng-options="x.SongName for x in data.arrayAssignedSongs"> -->
-      <!-- <select id="listboxassigned" size="10" multiple ng-model="assignedSongs" ng-options="x.SongName for x in data.arrayAssignedSongs track by x.Id">       -->
-      <!-- <select id="listboxassigned" size="10" multiple ng-model="assignedSongs" ng-options="x.SongId for x in data.arrayAssignedSongs track by x.GigId">               -->
-      <select id="listboxassigned" size="10" multiple ng-model="assignedSongs" >              
-    </select>
-  </td>
-
-  <td>&nbsp;&nbsp;&nbsp;</td>
-
-  <td valign="center">
-    <button class="btn btn-primary" ng-click="listbox_moveacross('listboxavailable', 'listboxassigned')">&lt;&lt;</button>
-    <br />
-    <br />
-    <button class="btn btn-primary" ng-click="listbox_moveacross('listboxassigned', 'listboxavailable')">&gt;&gt;</button>
-  </td>
-
-  <td>&nbsp;&nbsp;&nbsp;</td>
-  <td>
-    <div>Available</div>
-      <!-- <select id="listboxavailable" size="10" multiple ng-model="availableSongs" ng-options="x.SongName for x in data.arrayAvailableSongs"> -->
-      <!-- <select id="listboxavailable" size="10" multiple ng-model="availableSongs" ng-options="x.SongName for x in data.arrayAvailableSongs track by x.Id"> -->
-      <select id="listboxavailable" size="10" multiple ng-model="availableSongs" >                    
-    </select>
-  </td>
-
-  <td>&nbsp;&nbsp;&nbsp;</td>
-
-  </tr>
-</table>
-
-<br />
-<br />
-<!-- When pressed, execute the runQuery function in the MainController -->
-<button class="btn btn-danger" ng-click="runSave()">Save</button><br> 
-<br />
-<!-- end mss-test -->
 
 </body>
 

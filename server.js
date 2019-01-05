@@ -52,6 +52,7 @@ app.get("/Index", function(request, response) {
 // ASQuery API's  -- apiGetAllGigs
 //*********************************************************************
 app.get ("/ASQuery/api/apiGetAllGigs", function (req, res) {
+  console.log("Fetching Data from GIG_TAB");
   console.log("Attempting to connect userid = ", config.user);
   console.log("Attempting to connect password = ", config.password);
   console.log("Attempting to connect server = ", config.server);
@@ -60,7 +61,6 @@ app.get ("/ASQuery/api/apiGetAllGigs", function (req, res) {
   sql.connect(
     config,
     function(err) {
-      console.log("Fetching Data from GIG_TAB");
 
       if (err) {
         console.error("CONNECTION error: ", err);
@@ -86,7 +86,9 @@ app.get ("/ASQuery/api/apiGetAllGigs", function (req, res) {
               json: rows,
               length: rows.length
             });
+
             sql.close();
+            console.error("Closing Select Connection for GIG_TAB");
           }
         });
       }
@@ -98,6 +100,7 @@ app.get ("/ASQuery/api/apiGetAllGigs", function (req, res) {
 // ASQuery API's  -- apiAddGig
 //*********************************************************************
 app.post("/ASQuery/api/apiAddGig", function(req, res) {
+  console.error("Adding a Gig to GIG_TAB");
   console.error("Attempting to connect userid = ", config.user);
   console.error("Attempting to connect password = ", config.password);
   console.error("Attempting to connect server = ", config.server);
@@ -108,7 +111,6 @@ app.post("/ASQuery/api/apiAddGig", function(req, res) {
   sql.connect(
     config,
     function(err) {
-      console.error("Adding a Gig to GIG_TAB");
 
       if (err) {
         console.error("CONNECTION error: ", err);
@@ -153,6 +155,7 @@ app.post("/ASQuery/api/apiAddGig", function(req, res) {
             });
 
             sql.close();
+            console.error("Closing Insert Connection for GIG_TAB");            
           }
         });
       }
@@ -166,6 +169,7 @@ app.post("/ASQuery/api/apiAddGig", function(req, res) {
 // ASQuery API's  -- apiUpdateGig
 //*********************************************************************
 app.put("/ASQuery/api/apiUpdateGig", function(req, res) {
+  console.error("Updating a Gig to GIG_TAB");
   console.error("Attempting to connect userid = ", config.user);
   console.error("Attempting to connect password = ", config.password);
   console.error("Attempting to connect server = ", config.server);
@@ -177,7 +181,6 @@ app.put("/ASQuery/api/apiUpdateGig", function(req, res) {
   sql.connect(
     config,
     function(err) {
-      console.error("Updating a Gig to Gig_Tab");
 
       if (err) {
         console.error("CONNECTION error: ", err);
@@ -220,6 +223,7 @@ app.put("/ASQuery/api/apiUpdateGig", function(req, res) {
             });
 
             sql.close();
+            console.error("Closing Update Connection for GIG_TAB");            
           }
         });
       }
@@ -233,6 +237,7 @@ app.put("/ASQuery/api/apiUpdateGig", function(req, res) {
 // will append the 'id' of the record to be deleted.
 //*********************************************************************
 app.delete("/ASQuery/api/apiDeleteGig/:id", function(req, res) {
+  console.error("Delete a Gig from Gig_Tab");
   console.error("Attempting to connect userid = ", config.user);
   console.error("Attempting to connect password = ", config.password);
   console.error("Attempting to connect server = ", config.server);
@@ -245,7 +250,6 @@ app.delete("/ASQuery/api/apiDeleteGig/:id", function(req, res) {
   sql.connect(
     config,
     function(err) {
-      console.error("Delete a Gig from Gig_Tab");
 
       if (err) {
         console.error("CONNECTION error: ", err);
@@ -281,6 +285,7 @@ app.delete("/ASQuery/api/apiDeleteGig/:id", function(req, res) {
             });
 
             sql.close();
+            console.error("Closing Delete Connection for GIG_TAB");            
           }
         });
       }
@@ -292,6 +297,7 @@ app.delete("/ASQuery/api/apiDeleteGig/:id", function(req, res) {
 // ASQuery API's  -- apiGetAllSongs
 //*********************************************************************
 app.get("/ASQuery/api/apiGetAllSongs", function(req, res) {
+  console.error("Fetching Data from SONG_TAB");
   console.error("Attempting to connect userid = ", config.user);
   console.error("Attempting to connect password = ", config.password);
   console.error("Attempting to connect server = ", config.server);
@@ -300,7 +306,6 @@ app.get("/ASQuery/api/apiGetAllSongs", function(req, res) {
   sql.connect(
     config,
     function(err) {
-      console.error("Fetching Data from SONG_TAB");
 
       if (err) {
         console.error("CONNECTION error: ", err);
@@ -326,7 +331,9 @@ app.get("/ASQuery/api/apiGetAllSongs", function(req, res) {
               json: rows,
               length: rows.length
             });
+
             sql.close();
+            console.error("Closing Select Connection for SONG_TAB");            
           }
         });
       }
@@ -338,6 +345,7 @@ app.get("/ASQuery/api/apiGetAllSongs", function(req, res) {
 // ASQuery API's  -- apiAddSong
 //*********************************************************************
 app.post("/ASQuery/api/apiAddSong", function(req, res) {
+  console.error("Adding a Song to SONG_TAB");
   console.error("Attempting to connect userid = ", config.user);
   console.error("Attempting to connect password = ", config.password);
   console.error("Attempting to connect server = ", config.server);
@@ -349,7 +357,6 @@ app.post("/ASQuery/api/apiAddSong", function(req, res) {
   sql.connect(
     config,
     function(err) {
-      console.error("Adding a Song to SONG_TAB");
 
       if (err) {
         console.error("CONNECTION error: ", err);
@@ -396,6 +403,7 @@ app.post("/ASQuery/api/apiAddSong", function(req, res) {
             });
 
             sql.close();
+            console.error("Closing Insert Connection for SONG_TAB");            
           }
         });
       }
@@ -407,6 +415,7 @@ app.post("/ASQuery/api/apiAddSong", function(req, res) {
 // ASQuery API's  -- apiUpdateSong
 //*********************************************************************
 app.put("/ASQuery/api/apiUpdateSong", function(req, res) {
+  console.error("Updating a Song to SONG_TAB");
   console.error("Attempting to connect userid = ", config.user);
   console.error("Attempting to connect password = ", config.password);
   console.error("Attempting to connect server = ", config.server);
@@ -419,7 +428,6 @@ app.put("/ASQuery/api/apiUpdateSong", function(req, res) {
   sql.connect(
     config,
     function(err) {
-      console.error("Updating a Song to SONG_TAB");
 
       if (err) {
         console.error("CONNECTION error: ", err);
@@ -463,6 +471,7 @@ app.put("/ASQuery/api/apiUpdateSong", function(req, res) {
             });
 
             sql.close();
+            console.error("Closing Update Connection for SONG_TAB");            
           }
         });
       }
@@ -476,6 +485,7 @@ app.put("/ASQuery/api/apiUpdateSong", function(req, res) {
 // will append the 'id' of the record to be deleted.
 //*********************************************************************
 app.delete("/ASQuery/api/apiDeleteSong/:id", function(req, res) {
+  console.error("Delete a Song from SONG_TAB");
   console.error("Attempting to connect userid = ", config.user);
   console.error("Attempting to connect password = ", config.password);
   console.error("Attempting to connect server = ", config.server);
@@ -488,7 +498,6 @@ app.delete("/ASQuery/api/apiDeleteSong/:id", function(req, res) {
   sql.connect(
     config,
     function(err) {
-      console.error("Delete a Song from SONG_TAB");
 
       if (err) {
         console.error("CONNECTION error: ", err);
@@ -524,6 +533,7 @@ app.delete("/ASQuery/api/apiDeleteSong/:id", function(req, res) {
             });
 
             sql.close();
+            console.error("Closing Delete Connection for SONG_TAB");            
           }
         });
       }
@@ -536,6 +546,7 @@ app.delete("/ASQuery/api/apiDeleteSong/:id", function(req, res) {
 // ASQuery API's  -- apiGetAllSetLists
 //*********************************************************************
 app.get ("/ASQuery/api/apiGetAllSetLists", function (req, res) {
+  console.log("Fetching Data from SETLIST_TAB");
   console.log("Attempting to connect userid = ", config.user);
   console.log("Attempting to connect password = ", config.password);
   console.log("Attempting to connect server = ", config.server);
@@ -544,7 +555,6 @@ app.get ("/ASQuery/api/apiGetAllSetLists", function (req, res) {
   sql.connect(
     config,
     function(err) {
-      console.log("Fetching Data from SETLIST_TAB");
 
       if (err) {
         console.error("CONNECTION error: ", err);
@@ -570,7 +580,9 @@ app.get ("/ASQuery/api/apiGetAllSetLists", function (req, res) {
               json: rows,
               length: rows.length
             });
+
             sql.close();
+            console.error("Closing Select Connection for SETLIST_TAB");            
           }
         });
       }
@@ -582,6 +594,7 @@ app.get ("/ASQuery/api/apiGetAllSetLists", function (req, res) {
 // ASQuery API's  -- apiGetSetListForGig
 //*********************************************************************
 app.get ("/ASQuery/api/apiGetSetListForGig", function (req, res) {
+  console.log("Fetching Data from SETLIST_TAB");
   console.log("Attempting to connect userid = ", config.user);
   console.log("Attempting to connect password = ", config.password);
   console.log("Attempting to connect server = ", config.server);
@@ -591,7 +604,6 @@ app.get ("/ASQuery/api/apiGetSetListForGig", function (req, res) {
   sql.connect(
     config,
     function(err) {
-      console.log("Fetching Data from SETLIST_TAB");
 
       if (err) {
         console.error("CONNECTION error: ", err);
@@ -630,7 +642,9 @@ app.get ("/ASQuery/api/apiGetSetListForGig", function (req, res) {
               json: rows,
               length: rows.length
             });
+
             sql.close();
+            console.error("Closing Select Connection for SETLIST_TAB");            
           }
         });
       }
@@ -643,6 +657,7 @@ app.get ("/ASQuery/api/apiGetSetListForGig", function (req, res) {
 // ASQuery API's  -- apiAddSongToSetlist
 //*********************************************************************
 app.post("/ASQuery/api/apiAddSongToSetlist", function(req, res) {
+  console.error("Adding a Song to SETLIST_TAB");
   console.error("Attempting to connect userid = ", config.user);
   console.error("Attempting to connect password = ", config.password);
   console.error("Attempting to connect server = ", config.server);
@@ -654,7 +669,6 @@ app.post("/ASQuery/api/apiAddSongToSetlist", function(req, res) {
   sql.connect(
     config,
     function(err) {
-      console.error("Adding a Song to SETLIST_TAB");
 
       if (err) {
         console.error("CONNECTION error: ", err);
@@ -701,6 +715,7 @@ app.post("/ASQuery/api/apiAddSongToSetlist", function(req, res) {
             });
 
             sql.close();
+            console.error("Closing Insert Connection for SETLIST_TAB");            
           }
         });
       }
@@ -715,6 +730,7 @@ app.post("/ASQuery/api/apiAddSongToSetlist", function(req, res) {
 // will append the 'id' of the record to be deleted.
 //*********************************************************************
 app.delete("/ASQuery/api/apiDeleteSongFromSetlist/:id", function(req, res) {
+  console.error("Delete a Song from SETLIST_TAB");
   console.error("Attempting to connect userid = ", config.user);
   console.error("Attempting to connect password = ", config.password);
   console.error("Attempting to connect server = ", config.server);
@@ -727,7 +743,6 @@ app.delete("/ASQuery/api/apiDeleteSongFromSetlist/:id", function(req, res) {
   sql.connect(
     config,
     function(err) {
-      console.error("Delete a Song from SETLIST_TAB");
 
       if (err) {
         console.error("CONNECTION error: ", err);
@@ -763,6 +778,7 @@ app.delete("/ASQuery/api/apiDeleteSongFromSetlist/:id", function(req, res) {
             });
 
             sql.close();
+            console.error("Closing Delete Connection for SETLIST_TAB");
           }
         });
       }
