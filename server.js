@@ -16,6 +16,13 @@ var config = {
   database: "LunarTide"
 };
 
+/*mss-test*/
+// https://stackoverflow.com/questions/43345149/error-global-connection-already-exists-call-sql-close-first/43345466
+const pool = new sql.ConnectionPool(config);
+var conn = pool;
+/*mss-test*/
+
+
 // //*********************************************************************
 // // MYSQL
 // //*********************************************************************
@@ -26,6 +33,7 @@ var config = {
 //    password:'',
 //    database:'lunartide'
 //    });
+
 
 var app = express();
 app.use(bodyParser());
@@ -46,6 +54,39 @@ app.get("/Index", function(request, response) {
 });
 
 
+/*mss-test*/
+// app.get ("/ASQuery/api/apiGetAllGigs", function (req, res) {
+//   console.log("Fetching Data from GIG_TAB");
+//   console.log("Attempting to connect userid = ", config.user);
+//   console.log("Attempting to connect password = ", config.password);
+//   console.log("Attempting to connect server = ", config.server);
+//   console.log("Attempting to connect database = ", config.database);
+
+//   conn.connect().then(function () {
+//     var req = new sql.Request(conn);
+//     req.query("select * from GIG_TAB").then(function (rows) {
+//         console.log(rows);
+//         res.send({
+//           result: "success",
+//           err: "",
+//           json: rows,
+//           length: rows.length
+//         });
+
+//         conn.close();
+//         })
+//         .catch(function (err) {
+//             console.log(err);
+//             conn.close();
+//         });
+//     })
+//     .catch(function (err) {
+//         console.log(err);
+//     });  
+
+
+// });
+/*mss-test*/
 
 
 //*********************************************************************
@@ -88,7 +129,7 @@ app.get ("/ASQuery/api/apiGetAllGigs", function (req, res) {
             });
 
             sql.close();
-            console.error("Closing Select Connection for GIG_TAB");
+            console.log("Closing Select Connection for GIG_TAB");
           }
         });
       }
@@ -155,7 +196,7 @@ app.post("/ASQuery/api/apiAddGig", function(req, res) {
             });
 
             sql.close();
-            console.error("Closing Insert Connection for GIG_TAB");            
+            console.log("Closing Insert Connection for GIG_TAB");            
           }
         });
       }
@@ -223,7 +264,7 @@ app.put("/ASQuery/api/apiUpdateGig", function(req, res) {
             });
 
             sql.close();
-            console.error("Closing Update Connection for GIG_TAB");            
+            console.log("Closing Update Connection for GIG_TAB");            
           }
         });
       }
@@ -285,7 +326,7 @@ app.delete("/ASQuery/api/apiDeleteGig/:id", function(req, res) {
             });
 
             sql.close();
-            console.error("Closing Delete Connection for GIG_TAB");            
+            console.log("Closing Delete Connection for GIG_TAB");            
           }
         });
       }
@@ -333,7 +374,7 @@ app.get("/ASQuery/api/apiGetAllSongs", function(req, res) {
             });
 
             sql.close();
-            console.error("Closing Select Connection for SONG_TAB");            
+            console.log("Closing Select Connection for SONG_TAB");            
           }
         });
       }
@@ -403,7 +444,7 @@ app.post("/ASQuery/api/apiAddSong", function(req, res) {
             });
 
             sql.close();
-            console.error("Closing Insert Connection for SONG_TAB");            
+            console.log("Closing Insert Connection for SONG_TAB");            
           }
         });
       }
@@ -471,7 +512,7 @@ app.put("/ASQuery/api/apiUpdateSong", function(req, res) {
             });
 
             sql.close();
-            console.error("Closing Update Connection for SONG_TAB");            
+            console.log("Closing Update Connection for SONG_TAB");            
           }
         });
       }
@@ -533,7 +574,7 @@ app.delete("/ASQuery/api/apiDeleteSong/:id", function(req, res) {
             });
 
             sql.close();
-            console.error("Closing Delete Connection for SONG_TAB");            
+            console.log("Closing Delete Connection for SONG_TAB");            
           }
         });
       }
@@ -582,7 +623,7 @@ app.get ("/ASQuery/api/apiGetAllSetLists", function (req, res) {
             });
 
             sql.close();
-            console.error("Closing Select Connection for SETLIST_TAB");            
+            console.log("Closing Select Connection for SETLIST_TAB");            
           }
         });
       }
@@ -644,7 +685,7 @@ app.get ("/ASQuery/api/apiGetSetListForGig", function (req, res) {
             });
 
             sql.close();
-            console.error("Closing Select Connection for SETLIST_TAB");            
+            console.log("Closing Select Connection for SETLIST_TAB");            
           }
         });
       }
@@ -715,7 +756,7 @@ app.post("/ASQuery/api/apiAddSongToSetlist", function(req, res) {
             });
 
             sql.close();
-            console.error("Closing Insert Connection for SETLIST_TAB");            
+            console.log("Closing Insert Connection for SETLIST_TAB");            
           }
         });
       }
@@ -729,64 +770,107 @@ app.post("/ASQuery/api/apiAddSongToSetlist", function(req, res) {
 // The route is: /ASQuery/api/apiDeleteSongFromSetlist/:id the Calling Controller 
 // will append the 'id' of the record to be deleted.
 //*********************************************************************
+// app.delete("/ASQuery/api/apiDeleteSongFromSetlist/:id", function(req, res) {
+//   console.error("Delete a Song from SETLIST_TAB");
+//   console.error("Attempting to connect userid = ", config.user);
+//   console.error("Attempting to connect password = ", config.password);
+//   console.error("Attempting to connect server = ", config.server);
+//   console.error("Attempting to connect database = ", config.database);
+
+//   //Pull out of the Params the 'id' field
+//   const id = parseInt(req.params.id, 10);
+
+
+//   sql.connect(
+//     config,
+//     function(err) {
+
+//       if (err) {
+//         console.error("CONNECTION error: ", err);
+//         res.statusCode = 503;
+//         res.send({
+//           result: "error",
+//           err: err.code
+//         });
+//       } else {
+//         var request = new sql.Request();
+
+//         var temp = [];
+
+//         temp.push("Delete SETLIST_TAB WHERE Id = '" + id + "' ");
+//         query = temp.join("");
+
+//         console.log("Executing the following query:" + query);
+
+//         request.query(query, function(err, rows) {
+//           if (err) {
+//             console.error(err);
+//             res.statusCode = 500;
+//             res.send({
+//               result: "error",
+//               err: err.code
+//             });
+//           } else {
+//             res.send({
+//               result: "success",
+//               err: "",
+//               json: rows,
+//               length: rows.length
+//             });
+
+//             sql.close();
+//             console.log("Closing Delete Connection for SETLIST_TAB");
+//           }
+//         });
+//       }
+//     }
+//   );
+// });
+
 app.delete("/ASQuery/api/apiDeleteSongFromSetlist/:id", function(req, res) {
-  console.error("Delete a Song from SETLIST_TAB");
-  console.error("Attempting to connect userid = ", config.user);
-  console.error("Attempting to connect password = ", config.password);
-  console.error("Attempting to connect server = ", config.server);
-  console.error("Attempting to connect database = ", config.database);
+    console.error("Delete a Song from SETLIST_TAB");
+    console.error("Attempting to connect userid = ", config.user);
+    console.error("Attempting to connect password = ", config.password);
+    console.error("Attempting to connect server = ", config.server);
+    console.error("Attempting to connect database = ", config.database);
+  
+    //Pull out of the Params the 'id' field
+    const id = parseInt(req.params.id, 10);
+  
+  
+  conn.connect().then(function () {
+    var req = new sql.Request(conn);
 
-  //Pull out of the Params the 'id' field
-  const id = parseInt(req.params.id, 10);
+         var temp = [];
+         temp.push("Delete SETLIST_TAB WHERE Id = '" + id + "' ");
+         query = temp.join("");
 
+         console.log("Executing the following query:" + query);
 
-  sql.connect(
-    config,
-    function(err) {
-
-      if (err) {
-        console.error("CONNECTION error: ", err);
-        res.statusCode = 503;
+    req.query(query).then(function (rows) {
+        console.log(rows);
         res.send({
-          result: "error",
-          err: err.code
+          result: "success",
+          err: "",
+          json: rows,
+          length: rows.length
         });
-      } else {
-        var request = new sql.Request();
 
-        var temp = [];
-
-        temp.push("Delete SETLIST_TAB WHERE Id = '" + id + "' ");
-        query = temp.join("");
-
-        console.log("Executing the following query:" + query);
-
-        request.query(query, function(err, rows) {
-          if (err) {
-            console.error(err);
-            res.statusCode = 500;
-            res.send({
-              result: "error",
-              err: err.code
-            });
-          } else {
-            res.send({
-              result: "success",
-              err: "",
-              json: rows,
-              length: rows.length
-            });
-
-            sql.close();
+        console.log("Closing Delete Connection for SETLIST_TAB");
+        conn.close();
+        })
+        .catch(function (err) {
+            console.log(err);
             console.error("Closing Delete Connection for SETLIST_TAB");
-          }
+            conn.close();
         });
-      }
-    }
-  );
+    })
+    .catch(function (err) {
+        console.log(err);
+    });  
+
 });
-
-
+  
 
 
 

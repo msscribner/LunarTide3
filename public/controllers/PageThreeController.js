@@ -66,40 +66,134 @@
             deferred.reject(error);
          };
 
-         //Two ways to pass in data    
+         //Two ways to pass in data                                          
 //       $http.get(baseurl + 'api/apiGetSetListForGig' + '?gigid=' + jsonObj.GigId).then(onComplete, onError);  //Calls the ROUTE but .params doesn't contain the data
          $http.get(baseurl + 'api/apiGetSetListForGig', {params: jsonObj}).then(onComplete, onError);
 
          return deferred.promise;
       }/*get_GetSetListForGig*/
 
+      // function post_AddSongToSetlist(jsonObj) {
+      //    var deferred = $q.defer();
+
+      //    $http.post(baseurl + 'api/apiAddSongToSetlist', jsonObj)
+      //       .then(function (result) {
+      //          deferred.resolve(result.data);
+      //       }, function (error) {
+      //          deferred.reject(error);
+      //       });
+
+      //    return deferred.promise;
+      // }/*post_AddSongToSetlist*/
+
+      // function delete_DeleteSongFromSetlist(jsonObj) {
+      //    var deferred = $q.defer();
+
+      //    // Append to the 'route' the 'id' of the record to be deleted
+      //    $http.delete(baseurl + 'api/apiDeleteSongFromSetlist/' + jsonObj.Id)
+      //       .then(function (result) {
+      //                deferred.resolve(result.data);
+      //             },
+      //             function (error) {
+      //                deferred.reject(error);
+      //             }
+      //          );
+
+      //    return deferred.promise;
+      // }/*delete_DeleteSongFromSetlist*/
+
+
       function post_AddSongToSetlist(jsonObj) {
          var deferred = $q.defer();
 
-         $http.post(baseurl + 'api/apiAddSongToSetlist', jsonObj).then(function (result) {
-            deferred.resolve(result.data);
-         }, function (error) {
-            deferred.reject(error);
-         });
+         $http.post(baseurl + 'api/apiAddSongToSetlist', jsonObj)
+            .then(function (result) {
+               deferred.resolve(result.data);
+               })
+            .catch( function (error) {
+               deferred.reject(error);
+               })
+            .finally(function () {
+                  console.log("finally finished gists");
+              });               
 
-         return deferred.promise;
+          return deferred.promise;
       }/*post_AddSongToSetlist*/
+
 
       function delete_DeleteSongFromSetlist(jsonObj) {
          var deferred = $q.defer();
 
          // Append to the 'route' the 'id' of the record to be deleted
-         $http.delete(baseurl + 'api/apiDeleteSongFromSetlist/' + jsonObj.Id).then(function (result) {
-            deferred.resolve(result.data);
-         }, function (error) {
-            deferred.reject(error);
-         });
-
+         $http.delete(baseurl + 'api/apiDeleteSongFromSetlist/' + jsonObj.Id)
+            .then(function (result) {
+               deferred.resolve(result.data);
+               })
+            .catch(function (error) {
+               deferred.reject(error);
+               });
+               
          return deferred.promise;
       }/*delete_DeleteSongFromSetlist*/
 
+      // https://www.concretepage.com/questions/461      
+      // $http.get('sample_json.js')
+		// .then(function (response){
+		// 	$scope.jsondata = response.data;
+		// 	console.log("status:" + response.status);
+		// }).catch(function(response) {
+		//   console.error('Error occurred:', response.status, response.data);
+		// }).finally(function() {
+		// 	 console.log("Task Finished.");
+		// });      
 
 
+      function delete_AsyncDeleteSongFromSetlist (jsonObj) {
+         return new Promise(function(resolve, reject) {
+            let req = $http.delete(baseurl + 'api/apiDeleteSongFromSetlist/' + jsonObj.Id);
+
+            req.on('response', res => {
+               resolve(res);
+            });
+      
+            req.on('error', err => {
+               reject(err);
+            });
+         }); 
+      
+      }/*delete_AsyncDeleteSongFromSetlist*/
+
+
+      function delete_DeleteSongFromSetlist3 (jsonObj) {
+
+         return $http({method:"DELETE", url:baseurl + 'api/apiDeleteSongFromSetlist/' + jsonObj.Id}).then(function(result){
+
+            // What we return here is the data that will be accessible 
+            // to us after the promise resolves
+            return result.data;
+        });
+      
+      }/*delete_DeleteSongFromSetlist3*/
+
+
+
+      function getRandomNumber() {
+         return new Promise(function(resolve, reject) {
+           setTimeout(function() {
+             const randomValue = Math.random();
+             resolve(randomValue);
+//             resolve = randomValue;
+             }, 
+             2000);
+         }); 
+       }
+     
+      async function logNumbers() {
+         for (let x = 0; x < 3; x += 1) {
+           console.log(await getRandomNumber());
+         }
+      }/*logNumbers*/
+     
 
 
       return {
@@ -108,7 +202,10 @@
          get_AllSetLists: get_AllSetLists,
          get_GetSetListForGig: get_GetSetListForGig,
          post_AddSongToSetlist: post_AddSongToSetlist,
-         delete_DeleteSongFromSetlist: delete_DeleteSongFromSetlist
+         delete_DeleteSongFromSetlist: delete_DeleteSongFromSetlist,
+         delete_AsyncDeleteSongFromSetlist: delete_AsyncDeleteSongFromSetlist,
+         logNumbers: logNumbers,
+         delete_DeleteSongFromSetlist3: delete_DeleteSongFromSetlist3
       };
    });
 
@@ -117,7 +214,7 @@
    //*********************************************************************
    //* Controller 'PageThreeController'  
    //*********************************************************************
-   var PageThreeController = function($scope, $interval, $location, pagethreeFactoryCRUD) {
+   var PageThreeController = function($scope, $interval, $location, pagethreeFactoryCRUD, $http, $q) {
 
  
       //*********************************************************************
@@ -236,58 +333,257 @@
          SetList: Id, GigId, SongId
          */
 
-         //$scope.data.arrayAssignedSongs
+         //https://stackoverflow.com/questions/18421830/how-to-wait-till-the-response-comes-from-the-http-request-in-angularjs
+         var deletePromise = deleteSongsFromSetList(document.getElementById('listboxavailable'));
+         deletePromise.then(function (result) {
+            var x = result;
 
-         var GigId = $scope.data.selectedQuery;
+            var addPromise = addSongsFromSetList(document.getElementById('listboxassigned'));
+            addPromise.then(function (result) {
+                  y = result;
 
-         var lbAssigned = document.getElementById('listboxassigned');         
+                  GetSetListForGig($scope.data.selectedQuery);
+            });
+               
+         });
 
-         for(var count=0; count < lbAssigned.options.length; count++) {
-            var SongId = lbAssigned.options[count].value;
-            var SongName = lbAssigned.options[count].text;
+
+
+         //*********************************************************************
+         //* deleteSongsFromSetList
+         //*********************************************************************
+         function deleteSongsFromSetList(lbAvailable) {
+
+            // Set up a result array
+            var results = [];
+            var arrayDelete = [];
+
+            // Mark which request we're currently doing
+            var currentRequest = 0;
+
+            // Make this promise based.
+            var deferred = $q.defer();
+
+            // Traverse Available list to build a list of songs that need to be deleted.
+            // If Song is found in the 'arraySongList' then it needs to be Deleted. 
+            for(var count=0; count < lbAvailable.options.length; count++) {
+               var SongId = lbAvailable.options[count].value;
+               var SongName = lbAvailable.options[count].text;
+      
+               var node = findJsonNode($scope.data.arrayAssignedSongs, "SongId", SongId);
+
+               /*If found, then need to delete song from the SetList */
+               if (node != null) {
+                  arrayDelete.push(node);
+               } 
+            }
    
-            var node = findJsonNode($scope.data.arrayAssignedSongs, "SongId", SongId);
+            // If the some songs need to be deleted...
+            if (arrayDelete.length > 0)
+               makeNextRequest();
+            // Else, resolve the deferred promise...nothing to do.
+            else
+               deferred.resolve(results);
+               
 
-            /*If NOT found, then add song to the SetList */
-            if (node == null) {
-                  //Post the jsonObj and insert into Database
-                  var jsonObj = { GigId: GigId, SongId: SongId };
-                  pagethreeFactoryCRUD
-                     .post_AddSongToSetlist(jsonObj)
-                     .then( function(data) {
-                        /* Row was Added Successfully.  Pull out the IdentityValue and insert into the new jsonObj  */
-                     },
-                     function(error) {
-                        console.log(error);
+            //*********************************************************************
+            //* makeNextRequest - Call the Delete API and recursively call to delete additional songs.
+            //*********************************************************************
+            function makeNextRequest() {
+
+               var jsonObj = arrayDelete[currentRequest];
+               pagethreeFactoryCRUD
+               .delete_DeleteSongFromSetlist(jsonObj)
+               .then( function (data){
+
+                     // Save the result.
+                     results.push(data);
+
+                     // Increment progress.
+                     currentRequest++;
+
+                     // Continue if there are more items.
+                     if (currentRequest < arrayDelete.length){
+                        makeNextRequest();
                      }
-                  );
-            } 
-         }
+                     // Resolve the promise otherwise.
+                     else {
+                        deferred.resolve(results);  
+                     }  
+               });
+                                  
 
-         var lbAvailable = document.getElementById('listboxavailable');
-         for(var count=0; count < lbAvailable.options.length; count++) {
-            var SongId = lbAvailable.options[count].value;
-            var SongName = lbAvailable.options[count].text;
-   
-            var node = findJsonNode($scope.data.arrayAssignedSongs, "SongId", SongId);
+              // TODO handle errors appropriately.
+            }//makeNextRequest
 
-            /*If NOT found, then add song to the SetList */
-            if (node != null) {
-                  //Post the jsonObj and insert into Database
-                  var jsonObj = { Id: node.Id };
-                  pagethreeFactoryCRUD
-                     .delete_DeleteSongFromSetlist(jsonObj)
-                     .then( function(data) {
-                        /* Row was Added Successfully.  Pull out the IdentityValue and insert into the new jsonObj  */
-                     },
-                     function(error) {
-                        console.log(error);
+
+            // return a promise for the completed requests
+            return deferred.promise;
+          }//deleteSongsFromSetList
+
+
+         //*********************************************************************
+         //* addSongsFromSetList
+         //*********************************************************************
+         function addSongsFromSetList(lbAssigned) {
+
+            var GigId = $scope.data.selectedQuery;
+            
+            // Set up a result array
+            var results = [];
+            var arrayAdd = [];
+
+            // Mark which request we're currently doing
+            var currentRequest = 0;
+
+            // Make this promise based.
+            var deferred = $q.defer();
+
+
+            // Traverse Available list to build a list of songs that need to be Added.
+            // If Song is NOT found in the 'arraySongList' then it needs to be Added to the SetList. 
+            for(var count=0; count < lbAssigned.options.length; count++) {
+               var SongId = lbAssigned.options[count].value;
+               var SongName = lbAssigned.options[count].text;
+      
+               var node = findJsonNode($scope.data.arrayAssignedSongs, "SongId", SongId);
+
+               /*If NOT found, then add song to the SetList */
+               if (node == null) {
+                     //Post the jsonObj and insert into Database
+                     var jsonObj = { GigId: GigId, SongId: SongId };
+                     arrayAdd.push(jsonObj);
+               } 
+            }
+
+            // If the some songs need to be deleted...
+            if (arrayAdd.length > 0)
+               makeNextRequest();
+            // Else, resolve the deferred promise...nothing to do.
+            else
+               deferred.resolve(results);  
+
+
+
+            //*********************************************************************
+            //* makeNextRequest - Call the Add API and recursively call to add additional songs.
+            //*********************************************************************
+            function makeNextRequest() {
+
+               var jsonObj = arrayAdd[currentRequest];
+               pagethreeFactoryCRUD
+               .post_AddSongToSetlist(jsonObj)
+               .then( function (data){
+
+                     var identityvalue = data.json.recordset[0].identityvalue;
+
+                     // Save the result.
+                     results.push(data);
+
+                     // Increment progress.
+                     currentRequest++;
+
+                     // Continue if there are more items.
+                     if (currentRequest < arrayAdd.length){
+                        makeNextRequest();
                      }
-                  );
-            } 
-         }
+                     // Resolve the promise otherwise.
+                     else {
+                        deferred.resolve(results);  
+                     }  
+               });
+                                  
+              // TODO handle errors appropriately.
+
+            }//makeNextRequest
+
+            // return a promise for the completed requests
+            return deferred.promise;
+          }//addSongsFromSetList
+
 
       };/*runSave*/
+
+
+
+
+
+
+
+
+      $scope.runSave001 = function () {
+         /*
+         Songs: ID, SongName, ArtistName
+         SetList: Id, GigId, SongId
+         */
+
+
+
+
+//Working
+         // This logic will run queue up each song to be deleted and will not execute until the previous delete has completed.         
+         // //https://daveceddia.com/waiting-for-promises-in-a-loop/
+         // function DeleteSongFromSetList ()
+         // {
+         //    var baseurl = "/ASQuery/";
+         //    var chain = $q.when();
+         //   
+         //  
+         //    var lbAvailable = document.getElementById('listboxavailable');
+         //    for(var count=0; count < lbAvailable.options.length; count++) {
+         //       var SongId = lbAvailable.options[count].value;
+         //       var SongName = lbAvailable.options[count].text;
+         //
+         //       var node = findJsonNode($scope.data.arrayAssignedSongs, "SongId", SongId);
+         //
+         //       /*If NOT found, then add song to the SetList */
+         //       if (node != null) {
+         //             chain = chain.then(function() {
+         //                return  $http.delete(baseurl + 'api/apiDeleteSongFromSetlist/' + node.Id);
+         //                }
+         //             );
+         //       } 
+         //    }
+         // }
+
+         // Returns 'done' always even if an error is returned.
+         // //https://daveceddia.com/waiting-for-promises-in-a-loop/
+         // function DeleteSongFromSetList ()
+         // {
+         //    function successCallback  (response) { // Success callback
+         //       var x = response;
+         //     };
+         //
+         //     function errorCallback  (response) { // Error callback
+         //       var x = response;
+         //     };
+         //
+         //     function progressCallback   (response) { // Progress callback
+         //       var x = response;
+         //     };
+         //
+         //
+         //    var baseurl = "/ASQuery/";
+         //    var chain = $q.when('done', successCallback, errorCallback, progressCallback);
+         //   
+         //    var lbAvailable = document.getElementById('listboxavailable');
+         //    for(var count=0; count < lbAvailable.options.length; count++) {
+         //       var SongId = lbAvailable.options[count].value;
+         //       var SongName = lbAvailable.options[count].text;
+         //
+         //       var node = findJsonNode($scope.data.arrayAssignedSongs, "SongId", SongId);
+         // 
+         //       /*If NOT found, then add song to the SetList */
+         //       if (node != null) {
+         //             chain = chain.then(function() {
+         //                return  $http.delete(baseurl + 'api/apiDeleteSongFromSetlist/' + node.Id);
+         //                }
+         //             );
+         //       } 
+         //    }
+         // }
+ 
+      };/*runSave001*/
 
 
       //*********************************************************************
