@@ -130,6 +130,9 @@
                .delete_DeleteSong(jsonObj)
                .then(function (data) {
                      /* Do something here */
+
+                     /* Display the number of songs */
+                     $scope.songcount = $scope.pageonesongs.length;
                   },
                   function (error) {
                      console.log(error);
@@ -157,6 +160,9 @@
                   jsonObj.ID = identityvalue;
                   temp1.push(jsonObj);
                   $scope.pageonesongs = temp1;
+
+                  /* Display the number of songs */
+                  $scope.songcount = $scope.pageonesongs.length;
                },
                function(error) {
                   console.log(error);
@@ -224,6 +230,10 @@
                   for (val of data.json.recordset) {
                      console.log(val);
                   }
+
+                  /* Display the number of songs */
+                  $scope.songcount = $scope.pageonesongs.length;
+
                },
                function(error) {
                   console.log(

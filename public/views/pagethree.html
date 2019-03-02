@@ -15,7 +15,7 @@
     </div>
 
   <!-- When pressed, execute the runQuery function in the MainController -->
-  <button class="btn btn-danger" ng-click="runQuery()">Run Query</button><br> 
+  <button id = "btn_runquery" class="btn btn-danger" ng-click="runQuery()">Run Query</button><br> 
     
 
 <!-- begin mss-test -->
@@ -42,10 +42,10 @@
    <td>&nbsp;&nbsp;&nbsp;</td>
 
    <td valign="center">
-      <button class="btn btn-primary" ng-click="listbox_moveacross('listboxavailable', 'listboxassigned')">&lt;&lt;</button>
+      <button id="pb_unassign" class="btn btn-primary" ng-click="listbox_moveacross('listboxavailable', 'listboxassigned')">&lt;&lt;</button>
       <br />
       <br />
-      <button class="btn btn-primary" ng-click="listbox_moveacross('listboxassigned', 'listboxavailable')">&gt;&gt;</button>
+      <button id="pb_assign" class="btn btn-primary" ng-click="listbox_moveacross('listboxassigned', 'listboxavailable')">&gt;&gt;</button>
    </td>
 
    <td>&nbsp;&nbsp;&nbsp;</td>
@@ -65,7 +65,7 @@
    <br />
    <br />
    <!-- When pressed, execute the runQuery function in the MainController -->
-   <button class="btn btn-danger" ng-click="runSave()">Save</button><br> 
+   <button id="btnrunsave" class="btn btn-danger" ng-click="runSave()">Save</button><br> 
    <br />
 <!-- end mss-test -->
 
