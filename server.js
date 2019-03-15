@@ -11,10 +11,19 @@ var sql = require("mssql");
 
 var config = {
   user: "sa",
-  password: "p@ssw0rd",
+  password: "hurricane",
   server: "CH-45452",
   database: "LunarTide"
 };
+
+/* This is for AWS ECS Instance */
+/*var config = {
+  user: "MasterUser",
+  password: "p@ssw0rd",
+  server: "masterdbinstance.ceb5gc48z2v4.us-east-2.rds.amazonaws.com",
+  database: "LunarTide"
+};*/
+
 
 /*mss-test*/
 // https://stackoverflow.com/questions/43345149/error-global-connection-already-exists-call-sql-close-first/43345466
@@ -50,7 +59,7 @@ app.use("/ASQuery", express.static(path.join(__dirname, "public")));
 // Index API's  (Identifies the url and the 'path' to the html)
 //*********************************************************************
 app.get("/Index", function(request, response) {
-  response.sendfile("public/views/Index.html");
+  response.sendfile("public/views/index.html");
 });
 
 
